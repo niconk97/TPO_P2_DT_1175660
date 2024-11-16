@@ -4,7 +4,7 @@ import org.example.adt.StaticStack;
 import org.example.adt.Stack;
 import org.example.utils.StackUtil;
 
-public class StaticQueueOfStacks implements QueueOfStacks {
+    public class StaticQueueOfStacks implements QueueOfStacks {
 
     private final int matrixSize; // Define el tamaño de la matriz (n x n)
     private final StaticStack[] array;
