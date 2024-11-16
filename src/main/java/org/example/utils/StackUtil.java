@@ -140,4 +140,17 @@ public class StackUtil {
         }
         return reverse; // C
     }
+
+    public static int stackSize(Stack stack) {
+        Stack copy = copy(stack); // Usamos el metodo de copia existente
+        int size = 0;
+
+        while (!copy.isEmpty()) {
+            copy.remove();
+            size++;
+        }
+
+        return size;
+    }
+
 }

@@ -13,7 +13,7 @@ public interface QueueOfStacks {
      * - La pila proporcionada no debe ser null.
      * - La cola de pilas no debe estar llena si se usa una implementación estática con capacidad máxima.
      */
-    void addStack(Stack stack);
+    void add(Stack stack);
 
     /**
      * Remueve y devuelve la pila al frente de la cola de pilas.
@@ -21,7 +21,7 @@ public interface QueueOfStacks {
      * @return La pila al frente de la cola.
      * @throws RuntimeException si la cola está vacía.
      */
-    Stack removeStack();
+    Stack remove();
 
     /**
      * Devuelve, sin remover, la pila al frente de la cola de pilas.
@@ -29,7 +29,7 @@ public interface QueueOfStacks {
      * @return La pila al frente de la cola.
      * @throws RuntimeException si la cola está vacía.
      */
-    Stack peekStack();
+    Stack getFirst();
 
     /**
      * Indica si la cola de pilas está vacía.

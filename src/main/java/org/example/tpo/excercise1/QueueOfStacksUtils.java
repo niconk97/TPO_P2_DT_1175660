@@ -12,15 +12,21 @@ public class QueueOfStacksUtils {
         int index = 0;
 
         while (!copiedQueue.isEmpty()) {
-            Stack stack = copiedQueue.removeStack(); // Obtener la pila en la posición actual
+            Stack stack = copiedQueue.remove(); // Obtener la pila en la posición actual
             Stack copiedStack = StackUtil.copy(stack); // Copiar la pila para preservar el estado
 
             // Acceder al elemento en la posición `index` de la pila
-            for (int i = 0; i <= index && !copiedStack.isEmpty(); i++) {
-                if (i == index) {
-                    trace += copiedStack.getTop(); // Agregar el elemento correspondiente a la traza
+            int currentSize = 0;
+            while (!copiedStack.isEmpty()) {
+                int topElement = copiedStack.getTop();
+                copiedStack.remove();
+
+                // Si el índice coincide con la posición actual en la pila, sumamos a la traza
+                if (currentSize == index) {
+                    trace += topElement;
+                    break; // No necesitamos seguir recorriendo esta pila
                 }
-                copiedStack.remove(); // Avanzar en la pila para alcanzar el índice deseado
+                currentSize++;
             }
 
             index++; // Mover al siguiente índice de la diagonal
@@ -29,76 +35,93 @@ public class QueueOfStacksUtils {
         return trace;
     }
 
+    public static QueueOfStacks getTranspose(QueueOfStacks originalQos) {
+        // Crear una copia de la cola original para preservar su estado
+        QueueOfStacks copiedQueue = QueueOfStacksUtils.copy(originalQos);
+        int matrixSize = copiedQueue.size(); // Suponemos que la matriz es cuadrada
 
-    public static QueueOfStacks getTranspose(QueueOfStacks queueOfStacks) {
-        int maxSize = 0;
-        QueueOfStacks tempQueue = new StaticQueueOfStacks();
-        QueueOfStacks transposedQueue = new StaticQueueOfStacks();
+        // Crear una nueva QueueOfStacks para la transpuesta
+        QueueOfStacks transposedQueue = new StaticQueueOfStacks(matrixSize); // Ajusta según tu implementación dinámica si es necesario
 
-        while (!queueOfStacks.isEmpty()) {
-            Stack stack = queueOfStacks.removeStack();
-            tempQueue.addStack(stack);
-            //maxSize = Math.max(maxSize, stack.size()); // ver esto
+        // Inicializar una matriz de pilas para formar las columnas transpuestas
+        StaticStack[] transposedStacks = new StaticStack[matrixSize];
+        for (int i = 0; i < matrixSize; i++) {
+            transposedStacks[i] = new StaticStack();
         }
 
-        for (int i = 0; i < maxSize; i++) {
-            StaticStack newStack = new StaticStack();
-            while (!tempQueue.isEmpty()) {
-                Stack stack = tempQueue.removeStack();
-                if (!stack.isEmpty()) {
-                    newStack.add(stack.getTop());
-                    stack.remove();
-                }
-                queueOfStacks.addStack(stack);
+        // Llenar las pilas transpuestas
+        while (!copiedQueue.isEmpty()) {
+            Stack currentStack = copiedQueue.remove();
+            Stack copiedStack = StackUtil.copy(currentStack);
+
+            for (int i = 0; i < matrixSize && !copiedStack.isEmpty(); i++) {
+                int value = copiedStack.getTop();
+                transposedStacks[i].add(value);
+                copiedStack.remove();
             }
-            transposedQueue.addStack(newStack);
+        }
+
+        // Agregar las pilas transpuestas a la nueva cola
+        for (int i = 0; i < matrixSize; i++) {
+            transposedQueue.add(transposedStacks[i]);
         }
 
         return transposedQueue;
     }
 
     public static QueueOfStacks addMatrices(QueueOfStacks q1, QueueOfStacks q2) {
-        QueueOfStacks resultQueue = new StaticQueueOfStacks();
 
-        while (!q1.isEmpty() && !q2.isEmpty()) {
-            Stack stack1 = q1.removeStack();
-            Stack stack2 = q2.removeStack();
+        if (q1 == null || q2 == null || q1.isEmpty() || q2.isEmpty()) {
+            throw new IllegalArgumentException("Las matrices no pueden estar vacías.");
+        }
+
+        if (q1.size() != q2.size()) {
+            throw new IllegalArgumentException("Las matrices deben ser de igual tamaño.");
+        }
+
+        QueueOfStacks copyQ1 = QueueOfStacksUtils.copy(q1);
+        QueueOfStacks copyQ2 = QueueOfStacksUtils.copy(q2);
+        QueueOfStacks resultQueue = new StaticQueueOfStacks(copyQ1.size());
+
+        while (!copyQ1.isEmpty() && !copyQ2.isEmpty()) {
+            Stack stack1 = copyQ1.remove();
+            Stack stack2 = copyQ2.remove();
             StaticStack resultStack = new StaticStack();
 
-            while (!stack1.isEmpty() || !stack2.isEmpty()) {
-                int value1 = stack1.isEmpty() ? 0 : stack1.getTop();
-                int value2 = stack2.isEmpty() ? 0 : stack2.getTop();
-                if (!stack1.isEmpty()) stack1.remove();
-                if (!stack2.isEmpty()) stack2.remove();
-
+            // Sumar los elementos de las pilas correspondientes
+            while (!stack1.isEmpty() && !stack2.isEmpty()) {
+                int value1 = stack1.getTop();
+                int value2 = stack2.getTop();
                 resultStack.add(value1 + value2);
+
+                stack1.remove();
+                stack2.remove();
             }
-            resultQueue.addStack(resultStack);
+
+            resultQueue.add(resultStack);
         }
 
         return resultQueue;
     }
 
     public static QueueOfStacks copy(QueueOfStacks originalQos) {
-        QueueOfStacks auxQueue = new StaticQueueOfStacks();
-        QueueOfStacks copyQueue = new StaticQueueOfStacks();
+        QueueOfStacks auxQueue = new StaticQueueOfStacks(originalQos.size());
+        QueueOfStacks copyQueue = new StaticQueueOfStacks(originalQos.size());
 
         // Vaciar `originalQos` y llenar `auxQueue` y `copyQueue`
         while (!originalQos.isEmpty()) {
-            Stack stack = originalQos.removeStack(); // Obtener la pila del frente
+            Stack stack = originalQos.remove(); // Obtener la pila del frente
             Stack stackCopy = StackUtil.copy(stack); // Crear una copia de la pila
-            auxQueue.addStack(stack); // Restaurar la pila original en la cola auxiliar
-            copyQueue.addStack(stackCopy); // Agregar la copia a la cola de copia
+            auxQueue.add(stack); // Restaurar la pila original en la cola auxiliar
+            copyQueue.add(stackCopy); // Agregar la copia a la cola de copia
         }
 
         // Restaurar el estado de `originalQos` a partir de `auxQueue`
         while (!auxQueue.isEmpty()) {
-            originalQos.addStack(auxQueue.removeStack());
+            originalQos.add(auxQueue.remove());
         }
 
         return copyQueue;
     }
-
-
 
 }
