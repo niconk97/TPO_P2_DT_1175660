@@ -2,8 +2,6 @@ package org.example.tpo.excercise3;
 
 import org.example.adt.Queue;
 import org.example.adt.StaticQueue;
-import org.example.tpo.excercise3.Stack;
-import org.example.tpo.excercise3.StaticGenericStack;
 import org.example.utils.QueueUtil;
 
 public class QueueOfQueueUtils {

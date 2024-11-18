@@ -1,19 +1,19 @@
 package org.example.tpo.excercise3;
 
-public class StaticGenericStack<T> implements Stack<T> {
+public class StaticGenericStack<E> implements Stack<E> {
 
     private static final int MAX = 10000;
-    private final T[] array;
+    private final E[] array;
     private int count;
 
     @SuppressWarnings("unchecked") // se agrega esta anotacion que evita que arroje advertencia cuando haces un nuevo new Object
     public StaticGenericStack() {
-        this.array = (T[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
+        this.array = (E[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
         this.count = 0;
     }
 
     @Override
-    public T getTop() {
+    public E getTop() {
         if (isEmpty()) {
             throw new RuntimeException("No se puede obtener el tope de una pila vacía");
         }
@@ -29,11 +29,11 @@ public class StaticGenericStack<T> implements Stack<T> {
     }
 
     @Override
-    public void add(T value) {
+    public void add(E element) {
         if (this.count == MAX) {
             throw new RuntimeException("La pila está llena");
         }
-        this.array[this.count] = value;
+        this.array[this.count] = element;
         this.count++;
     }
 
