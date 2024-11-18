@@ -7,7 +7,4 @@ public interface QueueOfQueue {
     void remove();
     void add(Queue queue);
     boolean isEmpty();
-    QueueOfQueue concatenate(QueueOfQueue... queues);
-    Queue flat();
-    QueueOfQueue reverseWithDepth();
 }
