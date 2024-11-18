@@ -81,13 +81,4 @@ import org.example.utils.StackUtil;
     public boolean isEmpty() {
         return this.count == 0; // O(1)
     }
-
-    /**
-     * Devuelve el tamaño actual de la cola de pilas.
-     * Complejidad: O(1)
-     */
-    @Override
-    public int size() {
-        return this.count;
-    } // O(1)
 }

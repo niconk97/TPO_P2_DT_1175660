@@ -38,7 +38,8 @@ public class QueueOfStacksUtils {
     public static QueueOfStacks getTranspose(QueueOfStacks originalQos) { // Complejidad O(n^2)
         // Crear una copia de la cola original para preservar su estado
         QueueOfStacks copiedQueue = QueueOfStacksUtils.copy(originalQos); // Complejidad O(n^2)
-        int matrixSize = copiedQueue.size(); // Suponemos que la matriz es cuadrada --- O(1)
+
+        int matrixSize = QueueOfStacksUtils.size(copiedQueue); // Suponemos que la matriz es cuadrada --- O(n^2)
 
         // Crear una nueva QueueOfStacks para la transpuesta
         QueueOfStacks transposedQueue = new StaticQueueOfStacks(matrixSize); // Complejidad O(1), inicialización
@@ -76,13 +77,16 @@ public class QueueOfStacksUtils {
             throw new IllegalArgumentException("Las matrices no pueden estar vacías.");
         }
 
-        if (q1.size() != q2.size()) { // O(1)
+        int sizeQ1 = QueueOfStacksUtils.size(q1); // O(n^2)
+        int sizeQ2 = QueueOfStacksUtils.size(q2); // O(n^2)
+
+        if (sizeQ1 != sizeQ2) { // O(1)
             throw new IllegalArgumentException("Las matrices deben ser de igual tamaño.");
         }
 
         QueueOfStacks copyQ1 = QueueOfStacksUtils.copy(q1); // Copia de la primera matriz --- O(n^2)
         QueueOfStacks copyQ2 = QueueOfStacksUtils.copy(q2); // Copia de la segunda matriz --- O(n^2)
-        QueueOfStacks resultQueue = new StaticQueueOfStacks(copyQ1.size()); // Creación de la matriz de resultado --- O(1)
+        QueueOfStacks resultQueue = new StaticQueueOfStacks(sizeQ1); // O(n^2)
 
         while (!copyQ1.isEmpty() && !copyQ2.isEmpty()) { // O(n) iteraciones, donde n es el tamaño de las colas = O(n^2)
             Stack stack1 = copyQ1.remove(); // O(n)
@@ -107,8 +111,8 @@ public class QueueOfStacksUtils {
 
 
     public static QueueOfStacks copy(QueueOfStacks originalQos) { // O(n^2)
-        QueueOfStacks auxQueue = new StaticQueueOfStacks(originalQos.size()); // O(1)
-        QueueOfStacks copyQueue = new StaticQueueOfStacks(originalQos.size()); // O(1)
+        QueueOfStacks auxQueue = new StaticQueueOfStacks(QueueOfStacksUtils.size(originalQos)); // O(n^2)
+        QueueOfStacks copyQueue = new StaticQueueOfStacks(QueueOfStacksUtils.size(originalQos)); // O(n^2)
 
         // Vaciar `originalQos` y llenar `auxQueue` y `copyQueue`
         while (!originalQos.isEmpty()) { // n veces O(n) = O(n^2)
@@ -125,5 +129,24 @@ public class QueueOfStacksUtils {
 
         return copyQueue;
     }
+
+    public static int size(QueueOfStacks qos) { // Complejidad O(n^2)
+        if (qos == null || qos.isEmpty()) { // O(1)
+            return 0; // Si la cola de pilas está vacía, el tamaño es 0 --- O(1)
+        }
+
+        QueueOfStacks copiedQueue = QueueOfStacksUtils.copy(qos); // Crear una copia para no modificar la original --- O(n^2)
+        int totalSize = 0; // O(1)
+
+        // Recorrer cada pila en la cola de pilas
+        while (!copiedQueue.isEmpty()) { // O(n) iteraciones, donde n es el tamaño de la cola
+            Stack stack = copiedQueue.remove(); // Obtener la pila actual --- O(n)
+            totalSize += StackUtil.stackSize(stack); // Contar el número de elementos en la pila y sumarlo al total --- O(n)
+        }
+
+        return totalSize; // Retornar el tamaño total --- O(1)
+    }
+
+
 
 }

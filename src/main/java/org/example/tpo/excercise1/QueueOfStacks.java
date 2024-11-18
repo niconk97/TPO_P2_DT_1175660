@@ -37,11 +37,4 @@ public interface QueueOfStacks {
      * @return true si está vacía, false de lo contrario.
      */
     boolean isEmpty();
-
-    /**
-     * Devuelve el número de pilas en la cola.
-     *
-     * @return El número de pilas en la cola.
-     */
-    int size();
 }
