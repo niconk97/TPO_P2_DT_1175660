@@ -2,37 +2,37 @@ package org.example.tpo.excercise2;
 
 import java.util.Random;
 
-public class StaticGenericSet<T> implements Set<T> {
+public class StaticGenericSet<E> implements Set<E> {
 
     private static final int MAX = 10000;
 
-    private final T[] array;
+    private final E[] array;
     private int count;
     private final Random random;
 
     @SuppressWarnings("unchecked") // se agrega esta anotacion que evita que arroje advertencia cuando haces un nuevo new Object
     public StaticGenericSet() {
-        this.array = (T[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
+        this.array = (E[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
         this.count = 0;
         this.random = new Random();
     }
 
     @Override
-    public void add(T value) {
+    public void add(E element) {
         for (int i = 0; i < this.count; i++) {
-            if (this.array[i].equals(value)) { // Verificar si el valor ya está en el conjunto
+            if (this.array[i].equals(element)) { // Verificar si el elemento ya está en el conjunto
                 return;
             }
         }
         if (this.count == MAX) {
             throw new RuntimeException("El conjunto está lleno");
         }
-        this.array[this.count] = value;
+        this.array[this.count] = element;
         this.count++;
     }
 
     @Override
-    public T choose() {
+    public E choose() {
         if (this.isEmpty()) {
             throw new RuntimeException("No se puede elegir un elemento de un conjunto vacío");
         }
@@ -41,12 +41,12 @@ public class StaticGenericSet<T> implements Set<T> {
     }
 
     @Override
-    public void remove(T value) {
+    public void remove(E element) {
         for (int i = 0; i < this.count; i++) {
-            if (this.array[i].equals(value)) {
+            if (this.array[i].equals(element)) {
                 this.array[i] = this.array[this.count - 1]; // Reemplazar con el último elemento
                 this.count--;
-                return; // Salir después de remover el valor
+                return; // Salir después de remover el elemento
             }
         }
     }

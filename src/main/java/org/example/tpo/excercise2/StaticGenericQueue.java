@@ -1,19 +1,19 @@
 package org.example.tpo.excercise2;
 
-public class StaticGenericQueue<T> implements Queue<T> {
+public class StaticGenericQueue<E> implements Queue<E> {
 
     private static final int MAX = 10000;
-    private final T[] array;
+    private final E[] array;
     private int count;
 
     @SuppressWarnings("unchecked") // se agrega esta anotacion que evita que arroje advertencia cuando haces un nuevo new Object
     public StaticGenericQueue() {
-        this.array = (T[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
+        this.array = (E[]) new Object[MAX]; // Crear un array de tipo Objeto que sirve para cualquier tipo de clases
         this.count = 0;
     }
 
     @Override
-    public T getFirst() {
+    public E getFirst() {
         if (isEmpty()) {
             throw new RuntimeException("No se puede obtener el primero de una cola vacía");
         }
@@ -32,7 +32,7 @@ public class StaticGenericQueue<T> implements Queue<T> {
     }
 
     @Override
-    public void add(T value) {
+    public void add(E value) {
         if (this.count == MAX) {
             throw new RuntimeException("La cola está llena");
         }
